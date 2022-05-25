@@ -18,3 +18,16 @@ export async function postGame(req, res) {
     return res.sendStatus(400)
   }
 }
+
+export async function getGames(req, res) {
+  try {
+    const games = req.query.name ?
+    await db.query(`SELECT * FROM games WHERE name ILIKE '${req.query.name}%'`):
+    await db.query(`SELECT * FROM games`)
+    
+    return res.status(200).send(games.rows)
+  } catch(e) {
+    console.log(e, "erro no getGames")
+    return res.status(400).send(e)
+  }
+}
