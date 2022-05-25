@@ -1,0 +1,19 @@
+{
+  "name": "projeto15-boardcamp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/picinelli/projeto-boardcamp.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/picinelli/projeto-boardcamp/issues"
+  },
+  "homepage": "https://github.com/picinelli/projeto-boardcamp#readme"
+}
