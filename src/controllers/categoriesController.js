@@ -3,8 +3,7 @@ import db from '../db.js'
 export async function postCategory(req, res) {
   const body = req.body
   try {
-    await db.connect()
-    await db.query(`INSERT INTO categories (name) VALUES ('${body.name}')`)
+    await db.query(`INSERT INTO categories (name) VALUES ($1)`, [body.name])
     res.sendStatus(200)
   } catch(e) {
     console.log(e, "erro no postCategory")

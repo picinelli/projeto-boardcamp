@@ -4,13 +4,11 @@ export async function postGame(req, res) {
   const body = req.body;
   try {
     await db.query(
-      `INSERT INTO games (name, image, "stockTotal", "categoryId", "pricePerDay") VALUES(
-        '${body.name}', 
-        '${body.image}', 
-        ${body.stockTotal}, 
-        ${body.categoryId}, 
-        ${body.pricePerDay})
-      `
+      `INSERT INTO games (name, image, "stockTotal", "categoryId", "pricePerDay")
+      VALUES(
+        $1, $2, $3, $4, $5
+      )
+      `, [body.name, body.image, body.stockTotal, body.categoryId, body.pricePerDay]
     );
     return res.sendStatus(200)
   } catch(e) {
@@ -22,9 +20,9 @@ export async function postGame(req, res) {
 export async function getGames(req, res) {
   try {
     const games = req.query.name ?
-    await db.query(`SELECT * FROM games WHERE name ILIKE '${req.query.name}%'`):
+    await db.query(`SELECT * FROM games WHERE name ILIKE $1`, [`${req.query.name}%`]):
     await db.query(`SELECT * FROM games`)
-    
+
     return res.status(200).send(games.rows)
   } catch(e) {
     console.log(e, "erro no getGames")
