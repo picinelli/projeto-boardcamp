@@ -16,8 +16,8 @@ export async function validatePostGame(req, res, next) {
   if(error) return res.status(400).send(error.details)
 
   try {
-    const gameAlreadyExists = await db.query(`SELECT * FROM games WHERE name = '${body.name}'`)
-    const categoryExists = await db.query(`SELECT * FROM categories WHERE id = '${body.categoryId}'`)
+    const gameAlreadyExists = await db.query(`SELECT * FROM games WHERE name = $1`, [body.name])
+    const categoryExists = await db.query(`SELECT * FROM categories WHERE id = $1`, [body.categoryId])
 
     if(gameAlreadyExists.rows.length > 0) {
       return res.sendStatus(409)

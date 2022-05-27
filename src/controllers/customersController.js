@@ -25,7 +25,7 @@ export async function getAllCustomers(req, res) {
     return res.status(200).send(customers.rows);
   } catch(e) {
     console.log(e, "Erro no getAllCustomers");
-    return sendStatus(500);
+    return res.sendStatus(500);
   }
 }
 
