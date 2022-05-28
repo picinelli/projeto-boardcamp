@@ -28,6 +28,8 @@ export async function postRental(req, res) {
 }
 
 export async function getRentals(req, res) {
+  const offset = req.query.offset ? req.query.offset : undefined
+  const limit = req.query.limit ? req.query.limit : undefined
   try {
     const rentalsSearch = await db.query(
       `SELECT json_build_object(
@@ -54,7 +56,8 @@ export async function getRentals(req, res) {
     JOIN customers c ON "customerId"=c.id
     JOIN games g ON "gameId"=g.id
     JOIN categories cat ON g."categoryId"=cat.id
-    `
+    OFFSET $1 LIMIT $2
+    `, [offset, limit]
     );
 
     const rentals = [];

@@ -18,10 +18,12 @@ export async function postGame(req, res) {
 }
 
 export async function getGames(req, res) {
+  const offset = req.query.offset ? req.query.offset : undefined
+  const limit = req.query.limit ? req.query.limit : undefined
   try {
     const games = req.query.name ?
-    await db.query(`SELECT * FROM games WHERE name ILIKE $1`, [`${req.query.name}%`]):
-    await db.query(`SELECT * FROM games`)
+    await db.query(`SELECT * FROM games WHERE name ILIKE $1 OFFSET $2 LIMIT $3`, [`${req.query.name}%`, offset, limit]):
+    await db.query(`SELECT * FROM games OFFSET $1 LIMIT $2`, [offset, limit])
 
     return res.status(200).send(games.rows)
   } catch(e) {

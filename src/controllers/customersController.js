@@ -17,10 +17,12 @@ export async function postCustomer(req, res) {
 }
 
 export async function getAllCustomers(req, res) {
+  const offset = req.query.offset ? req.query.offset : undefined
+  const limit = req.query.limit ? req.query.limit : undefined
   try {
     const customers = req.query.cpf ? 
-    await db.query(`SELECT * FROM customers WHERE cpf ILIKE $1`, [`${req.query.cpf}%`]):
-    await db.query(`SELECT * FROM customers`)
+    await db.query(`SELECT * FROM customers WHERE cpf ILIKE $1 OFFSET $2 LIMIT $3`, [`${req.query.cpf}%`, offset, limit]):
+    await db.query(`SELECT * FROM customers OFFSET $1 LIMIT $2`, [offset, limit])
 
     return res.status(200).send(customers.rows);
   } catch(e) {
