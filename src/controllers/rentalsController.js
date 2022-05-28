@@ -28,17 +28,39 @@ export async function postRental(req, res) {
 
 export async function getRentals(req, res) {
   try {
-    const rentals = await db.query(`
-    SELECT * FROM rentals
+    const rentalsSearch = await db.query(
+      `SELECT json_build_object(
+      'id', r.id,
+      'customerId', r."customerId",
+      'gameId', r."gameId",
+      'rentDate', r."rentDate",
+      'daysRented', r."daysRented",
+      'returnDate', r."returnDate",
+      'originalPrice', r."originalPrice",
+      'delayFee', r."delayFee",
+      'customer', json_build_object(
+        'id', c.id,
+        'name', c.name
+      ),
+      'game', json_build_object(
+        'id', g.id,
+        'name', g.name,
+        'categoryId', g."categoryId",
+        'categoryName', cat.name
+      )
+    )
+    FROM rentals r
+    JOIN customers c ON "customerId"=c.id
+    JOIN games g ON "gameId"=g.id
+    JOIN categories cat ON g."categoryId"=cat.id
     `);
-    // SELECT rentals.*, 
-    // customers.id, customers.name, 
-    // games.id, games.name, games."categoryId", games."categoryName"
-    // FROM rentals 
-    // JOIN customers ON rentals."customerId" = customers.id
-    // JOIN games ON rentals."gameId" = games.id
-    console.log(rentals);
-    res.status(200).send(rentals.rows);
+
+    const rentals = []
+    for (let rental of rentalsSearch.rows) {
+      rentals.push(rental.json_build_object)
+    }
+
+    res.status(200).send(rentals);
   } catch (e) {
     console.log(e, "Erro no getRentals");
     res.sendStatus(500);

@@ -31,7 +31,7 @@ export async function getAllCustomers(req, res) {
 
 export async function getSpecificCustomer(req, res) {
   const ID = req.params.id
-  console.log(ID)
+
   try {
     const customer = await db.query(`SELECT * FROM customers WHERE id = $1`, [ID])
     if(customer.rows.length < 1) return res.status(404).send("Usuario nao existe")
@@ -46,12 +46,6 @@ export async function getSpecificCustomer(req, res) {
 export async function putCustomer(req, res) {
   const ID = req.params.id
   const {body} = req
-  // {
-  //   name: 'João Alfredo',
-  //   phone: '21998899222',
-  //   cpf: '01234567890',
-  //   birthday: '1992-10-05'
-  // }
 
   try {
     await db.query(`
