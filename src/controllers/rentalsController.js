@@ -28,16 +28,10 @@ export async function postRental(req, res) {
 }
 
 export async function getRentals(req, res) {
-  const offset = req.query.offset ? req.query.offset : undefined
-  const limit = req.query.limit ? req.query.limit : undefined
-  let order = "id"
-  if (req.query.order) {
-    if(req.query.desc) {
-      order = `"${req.query.order}" DESC`
-    } else {
-      order = `"${req.query.order}"`
-    }
-  }
+  const status = res.locals.status
+  const offset = res.locals.offset
+  const limit = res.locals.limit
+  const order = res.locals.order
 
   try {
     const rentalsSearch = await db.query(
@@ -65,6 +59,7 @@ export async function getRentals(req, res) {
     JOIN customers c ON "customerId"=c.id
     JOIN games g ON "gameId"=g.id
     JOIN categories cat ON g."categoryId"=cat.id
+    ${status}
     ORDER BY r.${order} OFFSET $1 LIMIT $2
     `, [offset, limit]
     )
