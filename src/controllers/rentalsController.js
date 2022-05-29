@@ -30,6 +30,15 @@ export async function postRental(req, res) {
 export async function getRentals(req, res) {
   const offset = req.query.offset ? req.query.offset : undefined
   const limit = req.query.limit ? req.query.limit : undefined
+  let order = "id"
+  if (req.query.order) {
+    if(req.query.desc) {
+      order = `"${req.query.order}" DESC`
+    } else {
+      order = `"${req.query.order}"`
+    }
+  }
+
   try {
     const rentalsSearch = await db.query(
       `SELECT json_build_object(
@@ -51,14 +60,14 @@ export async function getRentals(req, res) {
         'categoryId', g."categoryId",
         'categoryName', cat.name
       )
-    )
+    ) 
     FROM rentals r
     JOIN customers c ON "customerId"=c.id
     JOIN games g ON "gameId"=g.id
     JOIN categories cat ON g."categoryId"=cat.id
-    OFFSET $1 LIMIT $2
+    ORDER BY r.${order} OFFSET $1 LIMIT $2
     `, [offset, limit]
-    );
+    )
 
     const rentals = [];
     for (let rental of rentalsSearch.rows) {
