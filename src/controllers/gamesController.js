@@ -31,9 +31,25 @@ export async function getGames(req, res) {
 
   try {
     const games = req.query.name ?
-    await db.query(`SELECT * FROM games g WHERE name ILIKE $1 ORDER BY g.${order} OFFSET $2 LIMIT $3`, [`${req.query.name}%`, offset, limit]):
-    await db.query(`SELECT * FROM games g ORDER BY g.${order} OFFSET $1 LIMIT $2`, [offset, limit])
+    await db.query(`
+    SELECT g.* , COUNT(name) AS "rentalsCount"
+    FROM games g 
+    LEFT JOIN rentals r ON g.id = r."gameId"
+    WHERE name ILIKE $1 
+    GROUP by g.id
+    ORDER BY g.${order} 
+    OFFSET $2 
+    LIMIT $3`, [`${req.query.name}%`, offset, limit])
+    :
+    await db.query(`
+    SELECT g.*, COUNT(g.name) AS "rentalsCount"
+    FROM games g 
+    LEFT JOIN rentals r ON g.id = r."gameId"
+    GROUP by g.id 
+    ORDER BY g.${order} 
+    OFFSET $1 LIMIT $2`, [offset, limit])
 
+    console.log(games)
     return res.status(200).send(games.rows)
   } catch(e) {
     console.log(e, "erro no getGames")

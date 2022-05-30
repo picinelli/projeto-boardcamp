@@ -2,7 +2,7 @@ export function getRentalsFilter(req, res, next) {
   res.locals.offset = req.query.offset ? req.query.offset : undefined;
   res.locals.limit = req.query.limit ? req.query.limit : undefined;
   res.locals.status = "WHERE r.id > -1";
-  res.locals.order = "id"
+  res.locals.order = "id";
 
   if (req.query.status === "closed") {
     if (req.query.startDate) {
@@ -29,4 +29,24 @@ export function getRentalsFilter(req, res, next) {
   }
 
   next();
+}
+
+export function getRentalsMetricsFilter(req, res, next) {
+  const {startDate, endDate} = req.query
+  res.locals.filterDate = `WHERE id > -1`
+  if(startDate && endDate) {
+    res.locals.filterDate = `
+    WHERE "rentDate" >= '${startDate}' 
+    AND "rentDate" <= '${endDate}'`
+  }
+  if(startDate) {
+    res.locals.filterDate = `
+    WHERE "rentDate" >= '${startDate}'`
+  }
+  if(endDate) {
+    res.locals.filterDate = `
+    WHERE "rentDate" <= '${endDate}'`
+  }
+
+  next()
 }

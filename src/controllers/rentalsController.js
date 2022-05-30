@@ -28,10 +28,10 @@ export async function postRental(req, res) {
 }
 
 export async function getRentals(req, res) {
-  const status = res.locals.status
-  const offset = res.locals.offset
-  const limit = res.locals.limit
-  const order = res.locals.order
+  const status = res.locals.status;
+  const offset = res.locals.offset;
+  const limit = res.locals.limit;
+  const order = res.locals.order;
 
   try {
     const rentalsSearch = await db.query(
@@ -61,8 +61,9 @@ export async function getRentals(req, res) {
     JOIN categories cat ON g."categoryId"=cat.id
     ${status}
     ORDER BY r.${order} OFFSET $1 LIMIT $2
-    `, [offset, limit]
-    )
+    `,
+      [offset, limit]
+    );
 
     const rentals = [];
     for (let rental of rentalsSearch.rows) {
@@ -133,7 +134,7 @@ export async function endRental(req, res) {
         returnDate,
         rental.originalPrice,
         rental.delayFee,
-        ID
+        ID,
       ]
     );
 
@@ -141,5 +142,28 @@ export async function endRental(req, res) {
   } catch (e) {
     console.log(e, "Erro no endRental");
     res.sendStatus(500);
+  }
+}
+
+export async function getRentalsMetrics(req, res) {
+  res.locals.status = `WHERE r."returnDate" IS NULL AND r."rentDate" >= '${req.query.startDate}'`;
+  const filterDate = res.locals.filterDate
+  try {
+    const rentalSearch = await db.query(`
+    SELECT COUNT(id), 
+    SUM(COALESCE("originalPrice", 0) + COALESCE("delayFee", 0)) 
+    AS revenue FROM rentals
+    ${filterDate}
+    `);
+    const rental = rentalSearch.rows[0];
+    const metrics = {
+      revenue: Number(rental.revenue),
+      rentals: Number(rental.count),
+      average: rental.revenue / rental.count,
+    };
+
+    res.status(200).send(metrics);
+  } catch (e) {
+    console.log(e, "Erro no getRentalsMetrics");
   }
 }

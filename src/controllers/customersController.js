@@ -56,7 +56,7 @@ export async function getSpecificCustomer(req, res) {
     if (customer.rows.length < 1)
       return res.status(404).send("Usuario nao existe");
 
-    return res.status(200).send(customer.rows);
+    return res.status(200).send(customer.rows[0]);
   } catch (e) {
     console.log(e, "Erro no getSpecificCustomer");
     return res.sendStatus(500);
