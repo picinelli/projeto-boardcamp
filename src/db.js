@@ -3,14 +3,16 @@ import 'dotenv/config'
 
 const {Pool} = pg
 
-const client = new Pool({
+const databaseConfig = {
   connectionString: process.env.DATABASE_URL,
-});
+};
 
 if(process.env.MODE === "PROD") {
-  client.ssl = {
+  databaseConfig.ssl = {
     rejectUnauthorized: false
   }
 }
 
-export default client
+const db = new Pool(databaseConfig)
+
+export default db
