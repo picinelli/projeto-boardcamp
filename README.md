@@ -20,7 +20,7 @@
 
 ## ✅ Requisitos
 
-- [x] Geral
+- Geral
     - [x]  Versionamento usando Git é obrigatório, crie um **repositório público** no seu perfil do GitHub.
     - [x]  Faça *commits* a cada funcionalidade implementada.
 - CRUD de Categorias [Create|Read]
