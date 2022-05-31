@@ -7,4 +7,10 @@ const client = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
 
+if(process.env.MODE === "PROD") {
+  client.ssl = {
+    rejectUnauthorized: false
+  }
+}
+
 export default client

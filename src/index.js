@@ -15,4 +15,5 @@ app.use(gamesRouter);
 app.use(customersRouter);
 app.use(rentalsRouter);
 
-app.listen(4000, console.log("Server is now online"));
+const port = process.env.PORT || 4000
+app.listen(port, console.log("Server is now online"));

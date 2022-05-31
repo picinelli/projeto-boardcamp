@@ -31,11 +31,24 @@ export async function getAllCustomers(req, res) {
   try {
     const customers = req.query.cpf
       ? await db.query(
-          `SELECT * FROM customers c WHERE cpf ILIKE $1 ORDER BY c.${order} OFFSET $2 LIMIT $3`,
+          `SELECT c.*, COUNT(r."customerId") AS "rentalsCount" 
+          FROM customers c 
+          LEFT JOIN rentals r ON c.id = r."customerId"
+          WHERE cpf ILIKE $1 
+          GROUP by c.id
+          ORDER BY c.${order} 
+          OFFSET $2 
+          LIMIT $3`,
           [`${req.query.cpf}%`, offset, limit]
         )
       : await db.query(
-          `SELECT * FROM customers c ORDER BY c.${order} OFFSET $1 LIMIT $2`,
+          `SELECT c.*, COUNT(r."customerId") AS "rentalsCount" 
+          FROM customers c
+          LEFT JOIN rentals r ON c.id = r."customerId"
+          GROUP by c.id
+          ORDER BY c.${order} 
+          OFFSET $1 
+          LIMIT $2`,
           [offset, limit]
         );
 
@@ -50,9 +63,13 @@ export async function getSpecificCustomer(req, res) {
   const ID = req.params.id;
 
   try {
-    const customer = await db.query(`SELECT * FROM customers WHERE id = $1`, [
-      ID,
-    ]);
+    const customer = await db.query(
+      `SELECT c.*, COUNT(r."customerId") AS "rentalsCount" 
+      FROM customers c
+      LEFT JOIN rentals r ON c.id = r."customerId"
+      WHERE c.id = $1
+      GROUP by c.id`,
+      [ID]);
     if (customer.rows.length < 1)
       return res.status(404).send("Usuario nao existe");
 

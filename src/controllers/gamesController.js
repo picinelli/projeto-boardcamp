@@ -49,7 +49,6 @@ export async function getGames(req, res) {
     ORDER BY g.${order} 
     OFFSET $1 LIMIT $2`, [offset, limit])
 
-    console.log(games)
     return res.status(200).send(games.rows)
   } catch(e) {
     console.log(e, "erro no getGames")
