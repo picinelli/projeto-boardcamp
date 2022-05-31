@@ -3,7 +3,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/picinelli/projeto-boardcamp">
-    <img src="https://bootcampra.notion.site/Projeto-15-Boardcamp-986b53cdbc5547ecbab6ce6848136607" alt="Logo" width="100">
+    <img src="https://notion-emojis.s3-us-west-2.amazonaws.com/prod/svg-twitter/1f5fa-fe0f.svg" alt="Logo" width="100">
   </a>
 
 <h3 align="center">Projeto - BoardCamp (BACK-END)</h3>
