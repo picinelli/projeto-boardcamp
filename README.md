@@ -20,9 +20,7 @@
 
 ## ✅ Requisitos
 
-**Importante:** Para todas as operações de CRUD, fiquem atentos aos formatos e *status code* esperados nas operações. É de extrema importância que todos sejam respeitados!
-
-- Geral
+- [x] Geral
     - [x]  Versionamento usando Git é obrigatório, crie um **repositório público** no seu perfil do GitHub.
     - [x]  Faça *commits* a cada funcionalidade implementada.
 - CRUD de Categorias [Create|Read]
